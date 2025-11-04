@@ -1,64 +1,60 @@
- 
-        /* ====================================
-           BASE CSS & PREMIUM LOOK (Restored Layout)
-           ==================================== */
-        :root {
-            --primary-color: #1a73e8; 
-            --secondary-color: #5f6368;
-            --background-color: #f8f9fa;
-            --card-background: white;
-            --header-height: 100px;
-            --footer-height: 60px;
-            --success-color: #00897b;
-            --danger-color: #d93025;
-            --premium-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+/* ====================================
+   BASE CSS & PREMIUM LOOK (Unified Version for Laptop & Mobile)
+   ==================================== */
+:root {
+    --primary-color: #1a73e8; 
+    --secondary-color: #5f6368;
+    --background-color: #f5f6f8;
+    --card-background: #ffffff;
+    --header-height: 80px;
+    --footer-height: 70px;
+    --content-max-width: 1200px;
+    --success-color: #00897b;
+    --danger-color: #d93025;
+    --premium-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
 
-        body, html { 
-            height: 100%;
-            margin: 0; 
-            padding: 0; 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            overflow: hidden; 
-            background-color: var(--background-color); 
-            overscroll-behavior-y: none;
-            /* -webkit-user-select: none; */
-            /* user-select: none; */
-        }
+/* --- GLOBAL STYLES --- */
+body, html { 
+    height: 100%;
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    overflow-y: auto; 
+    background-color: var(--background-color); 
+    overscroll-behavior-y: none;
+}
 
-        /* --- 1. CORE APP FRAME & SCREEN MANAGEMENT --- */
-        #app-container {
-            width: 100%;
-            height: 100%;
-            position: relative; 
-            overflow: hidden;
-            background-color: var(--background-color);
-        }
+/* --- 1. CORE APP FRAME & SCREEN MANAGEMENT --- */
+#app-container {
+    width: 100%;
+    height: 100%;
+    position: relative; 
+    overflow: hidden;
+    background-color: var(--background-color);
+}
 
-        .app-screen { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--background-color);
-            transition: transform 0.35s ease-out; 
-            z-index: 1;
-            /* display: none;  */
-            will-change: transform; 
-            pointer-events: none; 
-        }
-        
-        .app-screen.active {
-            transform: translateX(0); 
-            z-index: 10;
-            display: block; 
-            pointer-events: auto; 
-        }
-
-        #welcome-screen {
-      /* Hide by default */
+.app-screen { 
     position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
+    transition: transform 0.35s ease-out; 
+    z-index: 1;
+    will-change: transform; 
+    pointer-events: none; 
+}
+.app-screen.active {
+    transform: translateX(0); 
+    z-index: 10;
+    display: block; 
+    pointer-events: auto; 
+}
+
+#welcome-screen {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -66,221 +62,352 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
     color: white;
-    background-color: blue;
-    font-size: 1.5em;
+    background-color: var(--primary-color);
+    font-size: 2em;
     text-align: center;
     z-index: 99;
+    display: none;
 }
 
-        
-        /* --- 2. FIXED HEADER AND FOOTER --- */
-        
-        .app-header { 
-            background-color: var(--card-background); 
-            border-bottom: 1px solid #e0e0e0; 
-            position: absolute; 
-            top: 0; 
-            width: 100%;
-            z-index: 15;
-            padding: 10px 15px;
-            box-sizing: border-box;
-        }
+/* --- 2. FIXED HEADER AND FOOTER --- */
+.app-header { 
+    background-color: var(--card-background); 
+    border-bottom: 1px solid #e0e0e0; 
+    position: fixed; 
+    top: 0; 
+    width: 100%;
+    height: var(--header-height);
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
 
-        .app-footer { 
-            height: var(--footer-height);
-            position: absolute; 
-            bottom: 0; 
-            width: 100%; 
-            display: none; 
-            justify-content: space-around; 
-            align-items: center;
-            background-color: var(--card-background); 
-            box-shadow: 0 -3px 10px rgba(0,0,0,0.15); 
-            z-index: 20; 
-            transition: transform 0.2s ease-out;
-        }
+.app-footer { 
+    height: var(--footer-height);
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    background-color: var(--card-background); 
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
+    z-index: 20;
+    transition: transform 0.2s ease-out;
+    gap: 40px;
+}
 
-        .app-footer.keyboard-active {
-            /* On a laptop, we don't need to move the footer, but we'll keep the class */
-        }
+.footer-button { 
+    text-align: center; 
+    cursor: pointer; 
+    color: var(--secondary-color);
+    transition: color 0.2s;
+    font-size: 1em;
+}
+.footer-button.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+.footer-button:hover {
+    color: var(--primary-color);
+}
+.footer-button span {
+    display: block;
+    font-size: 0.8em;
+    margin-top: 2px;
+}
 
-        .scrollable-content {
-            height: 100%;
-            overflow-y: auto; 
-            padding-top: var(--header-height); 
-            padding-bottom: var(--footer-height); 
-            box-sizing: border-box;
-            -webkit-overflow-scrolling: touch;
-        }
-        /* Adjust padding for screens without the large header */
-        #auth-screen .scrollable-content, #sell-screen .scrollable-content, #profile-screen .scrollable-content {
-            padding-top: 60px; 
-        }
+/* --- 3. CONTENT AREA --- */
+.main-content {
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin: var(--header-height) auto var(--footer-height);
+    flex-grow: 1;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px 40px;
+}
 
-        /* Modals (Vertical Slide) */
-        .app-modal {
-            transform: translateY(100%); 
-            transition: transform 0.3s ease-out;
-            z-index: 50;
-            display: block; 
-        }
-        .app-modal.active {
-            transform: translateY(0);
-        }
-        
-        .modal-header {
-            display: flex;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            background: var(--card-background);
-            z-index: 55;
-        }
-        .modal-close-button {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            margin-right: 15px;
-            color: #202124;
-        }
-        .modal-content-scroller {
-             height: 100%;
-             overflow-y: auto;
-             padding-bottom: 20px;
-             box-sizing: border-box;
-        }
+/* Scrollable areas */
+.scrollable-content {
+    height: 100%;
+    overflow-y: auto; 
+    padding-top: var(--header-height); 
+    padding-bottom: var(--footer-height); 
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+#auth-screen .scrollable-content, 
+#sell-screen .scrollable-content, 
+#profile-screen .scrollable-content {
+    padding-top: 60px; 
+}
 
-        /* Photo Viewer Modal (Full Screen) */
-        #photo-viewer-modal {
-             background-color: black;
-             z-index: 100;
-        }
-        .photo-viewer-content {
-            height: 100%;
-            width: 100%;
-            overflow-x: auto;
-            display: flex;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
-        }
-        .photo-viewer-slide {
-            flex-shrink: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            scroll-snap-align: center;
-        }
-        .photo-viewer-slide img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .photo-viewer-close-button {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 50%;
-            font-size: 1.2em;
-            z-index: 105;
-        }
+/* --- 4. MODALS --- */
+.app-modal {
+    transform: translateY(100%); 
+    transition: transform 0.3s ease-out;
+    z-index: 50;
+    display: block; 
+}
+.app-modal.active {
+    transform: translateY(0);
+}
 
-        /* --- 3. GENERAL UI STYLING --- */
-        
-        .search-area { display: flex; align-items: center; margin-bottom: 10px; }
-        .search-container { flex-grow: 1; margin-right: 10px; }
-        .search-container input {
-            width: 100%; padding: 12px; border: none; border-radius: 25px;
-            box-shadow: var(--premium-shadow); box-sizing: border-box; font-size: 1em; background-color: #fff;
-        }
-        .location-button {
-            background-color: #e8f0fe; color: var(--primary-color); border: none; padding: 10px 14px;
-            border-radius: 20px; cursor: pointer; font-size: 0.9em; font-weight: 600; white-space: nowrap;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+.modal-header {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: var(--card-background);
+    z-index: 55;
+}
+.modal-close-button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    margin-right: 15px;
+    color: #202124;
+}
+.modal-content-scroller {
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+}
 
-        .category-bar { display: flex; overflow-x: auto; padding: 5px 0 0 0; gap: 10px; -webkit-overflow-scrolling: touch; }
-        .category-bar::-webkit-scrollbar { display: none; }
-        .category-button {
-            flex-shrink: 0; padding: 8px 15px; border: 1px solid #ccc; border-radius: 20px;
-            background-color: var(--card-background); font-size: 0.9em; cursor: pointer; transition: all 0.2s; color: var(--secondary-color);
-        }
-        .category-button.active {
-            background-color: var(--primary-color); color: white; border-color: var(--primary-color); font-weight: 600;
-        }
+/* --- 5. PHOTO VIEWER MODAL --- */
+#photo-viewer-modal {
+    background-color: black;
+    z-index: 100;
+}
+.photo-viewer-content {
+    height: 100%;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+}
+.photo-viewer-slide {
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: center;
+}
+.photo-viewer-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.photo-viewer-close-button {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    font-size: 1.2em;
+    z-index: 105;
+}
 
-        .product-list { 
-            padding: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; 
-        }
-        .product-card { 
-            background: var(--card-background); border-radius: 12px; box-shadow: var(--premium-shadow); 
-            padding: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-            display: flex; flex-direction: column; overflow: hidden; min-height: 250px; position: relative;
-        }
-        .product-card-image {
-            height: 140px; background: #e0e0e0; border-radius: 8px; margin-bottom: 8px;
-            display: flex; justify-content: center; align-items: center; font-size: 3em; overflow: hidden; position: relative;
-        }
-        .product-card-image img { width: 100%; height: 100%; object-fit: cover; }
+/* --- 6. SEARCH & FILTERS --- */
+.search-area { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 20px;
+    max-width: 600px;
+}
+.search-container { 
+    flex-grow: 1; 
+    margin-right: 10px;
+}
+.search-container input {
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 30px; 
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 1em;
+    box-shadow: var(--premium-shadow);
+}
+.location-button {
+    background-color: #e8f0fe;
+    color: var(--primary-color);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
 
-        /* Multi-Image Upload Preview */
-        #image-preview-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; margin-bottom: 10px; }
-        .image-preview {
-            width: 100px; height: 100px; background-color: #eee; border-radius: 8px;
-            flex-shrink: 0; object-fit: cover; border: 1px solid #ddd;
-        }
+/* --- 7. CATEGORY BAR --- */
+.category-bar { 
+    display: flex; 
+    overflow-x: auto;
+    padding: 5px 0;
+    gap: 12px;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+}
+.category-bar::-webkit-scrollbar { display: none; }
+.category-button {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: var(--card-background);
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--secondary-color);
+}
+.category-button.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
 
-        /* Product Detail Gallery */
-        #detail-photo-gallery {
-            display: flex;
-            overflow-x: auto; 
-            gap: 5px; 
-            padding-bottom: 5px;
-            margin: 10px 0 20px 0;
-            -webkit-overflow-scrolling: touch;
-            cursor: zoom-in; 
-        }
-        .detail-photo-wrapper {
-            flex-shrink: 0;
-            width: 100%;
-            height: 40vh; 
-            max-height: 40vh;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #eee;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .detail-photo-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        form input, form textarea, form select {
-            width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block;
-            border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1em;
-        }
-        form button {
-            width: 100%; background-color: var(--primary-color); color: white; padding: 14px 20px;
-            margin: 8px 0; border: none; border-radius: 4px; cursor: pointer; font-size: 1.1em; font-weight: 600;
-        }
+/* --- 8. PRODUCT LISTING --- */
+.product-list { 
+    padding: 15px;
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    gap: 25px; 
+    justify-items: center;
+}
+.product-card { 
+    background: var(--card-background);
+    border-radius: 12px;
+    box-shadow: var(--premium-shadow);
+    padding: 15px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 250px;
+    position: relative;
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+}
+.product-card-image {
+    height: 180px; 
+    background: #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    font-size: 3em;
+    overflow: hidden;
+    position: relative;
+}
+.product-card-image img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+}
 
-        .footer-button { 
-            text-align: center; cursor: pointer; flex-grow: 1; padding: 5px 0; color: #80868b; transition: color 0.2s;
-        }
-        .footer-button.active { color: var(--primary-color); font-weight: 600; }
-        .footer-button span { display: block; font-size: 0.8em; margin-top: 2px; }
-       
+/* --- 9. FORMS --- */
+form input, form textarea, form select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+form button {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+/* --- 10. IMAGE PREVIEWS AND GALLERIES --- */
+#image-preview-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+.image-preview {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border-radius: 8px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+#detail-photo-gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 5px;
+    padding-bottom: 5px;
+    margin: 10px 0 20px;
+    -webkit-overflow-scrolling: touch;
+    cursor: zoom-in;
+}
+.detail-photo-wrapper {
+    flex-shrink: 0;
+    width: 100%;
+    height: 40vh;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.detail-photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- 11. RESPONSIVENESS --- */
+@media (max-width: 900px) {
+    .main-content {
+        padding: 15px 20px;
+        margin-top: 70px;
+        margin-bottom: 60px;
+    }
+    .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    body, html { overflow: hidden; }
+    .app-footer { display:flex;}
+}

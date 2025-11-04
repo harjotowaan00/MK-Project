@@ -1,6 +1,6 @@
 /* ====================================
     JAVASCRIPT CORE LOGIC & DATA
-    ===================================== */
+==================================== */
 
 // --- 1. CORE DATA STRUCTURE ---
 let productData = []; // Loaded from backend dynamically
@@ -16,7 +16,7 @@ const indianStatesUTs = [
 ];
 
 let currentFilter = { location: 'All India', category: 'All', search: '' };
-let userData = { name: 'John Doe', phone: '+91 98765XXXXX' };
+let userData = { name: 'John Doe', phone: '7082384800' };
 let uploadedImageURLs = [];
 let currentDetailItem = null;
 
@@ -66,32 +66,19 @@ function previewImages(event) {
 }
 
 // --- 4. SCREEN NAVIGATION ---
-function showScreen(screenToShow, direction = 'forward') {
+function showScreen(screenToShow) {
     const oldScreen = currentScreen;
     currentScreen = screenToShow;
 
-    oldScreen.style.zIndex = 5;
-    screenToShow.style.zIndex = 10;
+    oldScreen.style.display = 'none';
     screenToShow.style.display = 'block';
-    screenToShow.classList.add('active');
-
-    setTimeout(() => {
-        screenToShow.style.transform = 'translateX(0)';
-        oldScreen.classList.remove('active');
-        oldScreen.style.display = 'none';
-    }, 50);
 
     if (historyStack[historyStack.length - 1] !== screenToShow.id) {
         historyStack.push(screenToShow.id);
     }
-    
 
     const showFooter = [dashboardScreen, sellScreen, profileScreen].includes(screenToShow);
     appFooter.style.display = showFooter ? 'flex' : 'none';
-    document.querySelectorAll('.footer-button').forEach(btn => btn.classList.remove('active'));
-    if (screenToShow === dashboardScreen) document.getElementById('nav-home').classList.add('active');
-    if (screenToShow === sellScreen) document.getElementById('nav-sell').classList.add('active');
-    if (screenToShow === profileScreen) document.getElementById('nav-profile').classList.add('active');
 
     if (screenToShow === dashboardScreen) loadItems();
     if (screenToShow === profileScreen) renderProfileListings();
@@ -116,10 +103,7 @@ function openProductDetail(itemId) {
 
     if (data.images.length > 0) {
         data.images.forEach(url => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'detail-photo-wrapper';
-            wrapper.innerHTML = `<img src="${url}" alt="${data.title}">`;
-            photoGallery.appendChild(wrapper);
+            photoGallery.innerHTML += `<div class="detail-photo-wrapper"><img src="${url}" alt="${data.title}"></div>`;
         });
     } else {
         photoGallery.innerHTML = `<div class="detail-photo-wrapper"><div style="color:#666;">No Photos Uploaded</div></div>`;
@@ -141,10 +125,7 @@ function closeProductDetail() {
 function openPhotoViewer() {
     if (!currentDetailItem || !currentDetailItem.images.length) return;
     const viewerContent = document.getElementById('photo-viewer-content');
-    viewerContent.innerHTML = '';
-    currentDetailItem.images.forEach(url => {
-        viewerContent.innerHTML += `<div class="photo-viewer-slide"><img src="${url}" alt="Product"></div>`;
-    });
+    viewerContent.innerHTML = currentDetailItem.images.map(url => `<div class="photo-viewer-slide"><img src="${url}" alt="Product"></div>`).join("");
     photoViewerModal.classList.add('active');
 }
 function closePhotoViewer() { photoViewerModal.classList.remove('active'); }
@@ -156,7 +137,8 @@ function createProductCard(item) {
     const card = document.createElement('article');
     card.className = `product-card ${item.status === 'sold' ? 'sold-out' : ''}`;
     card.onclick = () => openProductDetail(item._id);
-    const imageContent = item.images.length > 0 ? `<img src="${item.images[0]}">` : item.icon || '✅';
+
+    const imageContent = item.images.length > 0 ? `<img src="${item.images[0]}">` : '✅';
     card.innerHTML = `
         <div class="product-card-image">${imageContent}</div>
         <h3>${item.title}</h3>
@@ -172,16 +154,17 @@ async function loadItems() {
     container.innerHTML = '<p>Loading items...</p>';
 
     try {
-        const res = await fetch('http://localhost:3000/api/items'); // or http://localhost:3000/api/items
+        const res = await fetch(`${backendURL}/api/items`);
         const items = await res.json();
         productData = items;
 
         const filtered = productData.filter(item => {
+            const isActive = (item.status || 'active') === 'active';
             const loc = currentFilter.location === 'All India' || item.state === currentFilter.location;
             const cat = currentFilter.category === 'All' || item.category === currentFilter.category;
             const term = currentFilter.search.toLowerCase();
             const search = !term || item.title.toLowerCase().includes(term) || (item.description || '').toLowerCase().includes(term);
-            return loc && cat && search;
+            return isActive && loc && cat && search;
         });
 
         if(filtered.length === 0){
@@ -200,56 +183,84 @@ async function loadItems() {
 
 // --- 9. PROFILE LISTINGS ---
 function renderProfileListings() {
-  const list = document.getElementById('active-listings');
-  list.innerHTML = '';
+    const activeListingsContainer = document.getElementById('active-listings');
+    activeListingsContainer.innerHTML = '';
 
-  fetch(`${backendURL}/api/user/listings?owner=${encodeURIComponent(data.sellerContact)}`)
-    .then(res => {
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      return res.json();
-    })
-    .then(items => {
-      items.forEach(item => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <strong>${item.title}</strong> (${item.status || 'active'})
-          <button onclick="toggleStatus(this,'${item.id}')">${item.status === 'active' ? 'Mark as Sold' : 'Re-list'}</button>
-        `;
-        list.appendChild(li);
-      });
-    })
-    .catch(err => {
-      console.error('Error fetching user listings:', err);
-      list.innerHTML = 'Error loading listings.';
+    const userItems = productData.filter(item =>
+        item.sellerContact === userData.phone || item.owner === userData.name
+    );
+
+    if(userItems.length === 0){
+        activeListingsContainer.innerHTML = '<li>No items found</li>';
+        return;
+    }
+
+    userItems.forEach(item => {
+        const itemStatus = (item.status || 'active'); 
+        const buttonText = itemStatus === 'sold' ? 'Re-list Item' : 'Mark as Sold';
+        const buttonColor = itemStatus === 'sold' ? '#ffc107' : 'var(--primary-color)';
+        
+        activeListingsContainer.innerHTML += `
+            <li id="listing-${item._id}">
+                <span style="font-weight: bold;">${item.title} (${itemStatus.toUpperCase()})</span> 
+                <button 
+                    style="background-color: ${buttonColor}; color: ${itemStatus === 'sold' ? '#333' : 'white'};
+                    border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; float: right;"
+                    onclick="toggleStatus(this, '${item._id}')"
+                >${buttonText}</button>
+            </li>`;
     });
 }
 
-
-function toggleStatus(btn, id) {
-    const i = productData.findIndex(x => x.id === id);
+// --- 10. ITEM STATUS TOGGLE ---
+async function toggleStatus(btn, id) {
+    const i = productData.findIndex(x => x._id === id);
     if (i === -1) return;
     const item = productData[i];
-    if (item.status === 'active') {
-        if (confirm(`Mark "${item.title}" as SOLD?`)) item.status = 'sold';
+    let newStatus;
+
+    if ((item.status || 'active') === 'active') {
+        if (confirm(`Mark "${item.title}" as SOLD?`)) newStatus = 'sold';
     } else {
-        if (confirm(`Re-list "${item.title}"?`)) item.status = 'active';
+        if (confirm(`Re-list "${item.title}"?`)) newStatus = 'active';
     }
-    renderProfileListings();
-    loadItems();
+    if (!newStatus) return;
+
+    const ok = await updateItemStatus(id, newStatus);
+    if (ok) {
+        item.status = newStatus;
+        renderProfileListings();
+        loadItems();
+    }
+}
+async function updateItemStatus(id, newStatus) {
+    try {
+        const res = await fetch(`${backendURL}/api/items/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus }),
+        });
+        return res.ok;
+    } catch {
+        alert('Failed to update status');
+        return false;
+    }
 }
 
-// --- 10. LOCATION POPULATE ---
+// --- 11. LOCATION SELECT ---
 function populateLocations() {
     const container = document.getElementById('location-button-container');
     const select = document.getElementById('item-state');
     container.innerHTML = '';
     select.innerHTML = '<option value="">Select State</option>';
+
     indianStatesUTs.forEach(state => {
         const btn = document.createElement('button');
         btn.innerHTML = state === 'All India' ? `🌐 ${state}` : `📍 ${state}`;
         btn.onclick = () => selectLocation(state);
         btn.style.cssText = 'width:100%;padding:12px;margin-bottom:10px;border-radius:8px;cursor:pointer;';
         container.appendChild(btn);
+
         if (state !== 'All India') {
             const opt = document.createElement('option');
             opt.value = state; opt.textContent = state;
@@ -266,7 +277,7 @@ function selectLocation(name) {
 function openLocationSelector() { populateLocations(); locationModal.classList.add('active'); historyStack.push('location-modal'); }
 function closeLocationSelector() { locationModal.classList.remove('active'); if (historyStack[historyStack.length - 1] === 'location-modal') historyStack.pop(); }
 
-// --- 11. AUTH FLOW ---
+// --- 12. AUTH FLOW ---
 document.getElementById('signup-form').addEventListener('submit', e => {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
@@ -284,15 +295,15 @@ document.getElementById('otp-form').addEventListener('submit', e => {
     if (otp.length === 6) {
         document.getElementById('user-name-display').textContent = userData.name;
         document.getElementById('user-phone-display').textContent = userData.phone.slice(0, 9) + 'XXXXX';
-        showScreen(dashboardScreen, 'forward');
+        showScreen(dashboardScreen);
     } else alert('Please enter a valid 6-digit OTP.');
 });
 document.getElementById('logout-btn').addEventListener('click', () => {
     userData = { name: 'John Doe', phone: '+91 98765XXXXX' };
-    showScreen(authScreen, 'backward');
+    showScreen(authScreen);
 });
 
-// --- 12. SELL FORM WITH BACKEND POST ---
+// --- 13. SELL FORM ---
 document.getElementById('sell-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const itemData = {
@@ -302,7 +313,9 @@ document.getElementById('sell-form').addEventListener('submit', async (e) => {
         category: document.getElementById('item-category').value,
         state: document.getElementById('item-state').value,
         city: document.getElementById('item-city').value,
-        sellerContact: document.getElementById('seller-contact').value,
+        sellerContact : userData.phone,
+        owner: userData.name,
+        status: 'active',
         images: uploadedImageURLs
     };
 
@@ -324,35 +337,30 @@ document.getElementById('sell-form').addEventListener('submit', async (e) => {
     }
 });
 
-// --- 13. FILTER & SEARCH ---
+// --- 14. FILTER & SEARCH ---
 document.getElementById('main-search-input').addEventListener('input', e => {
     currentFilter.search = e.target.value.trim();
     loadItems();
 });
-const categoryButtons = document.querySelectorAll('.category-bar .category-button');
 
+const categoryButtons = document.querySelectorAll('.category-bar .category-button');
 categoryButtons.forEach(btn => {
     btn.addEventListener('click', () => {
         categoryButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
         currentFilter.category = btn.getAttribute('data-category');
         loadItems();
     });
 });
 
-// --- 14. INIT ---
+// --- 15. INIT ---
 document.addEventListener('DOMContentLoaded', () => {
     populateLocations();
     loadItems();
 
     document.getElementById('nav-home').addEventListener('click', () => showScreen(dashboardScreen));
-document.getElementById('nav-sell').addEventListener('click', () => showScreen(sellScreen));
-document.getElementById('nav-profile').addEventListener('click', () => showScreen(profileScreen));
+    document.getElementById('nav-sell').addEventListener('click', () => showScreen(sellScreen));
+    document.getElementById('nav-profile').addEventListener('click', () => showScreen(profileScreen));
 
-
-    // Automatically switch from welcome to auth screen after 1 second
-    setTimeout(() => {
-        showScreen(authScreen);
-    }, 1000);
+    setTimeout(() => { showScreen(authScreen); }, 1000);
 });

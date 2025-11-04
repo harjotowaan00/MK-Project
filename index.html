@@ -1,215 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NearSell - Premium App</title>
-    <link rel="stylesheet" href="style.css">
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NearSell - Premium App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="app-container">
+  <div id="app-container">
 
     <!-- WELCOME SCREEN -->
     <section id="welcome-screen" class="app-screen">
-        <div style="text-align:center; margin-top:50vh; transform: translateY(-50%);">
-            <h1>NearSell</h1>
-            <p style="font-size: 1em;">Loading your local marketplace...</p>
-        </div>
+      <div style="text-align:center;">
+        <h1 style="font-size:2.5em; margin-bottom:10px;">NearSell</h1>
+        <p style="font-size:1.2em;">Loading your local marketplace...</p>
+      </div>
     </section>
 
     <!-- AUTH / LOGIN SCREEN -->
-    <section id="auth-screen" class="app-screen">
-        <header class="app-header">
-            <h2 style="color: var(--primary-color); text-align:center;">NearSell</h2>
-        </header>
-        <div class="scrollable-content">
-            <main style="padding: 20px;">
-                <div id="signup-container">
-                    <h3>Sign Up / Log In</h3>
-                    <form id="signup-form">
-                        <label for="name">Full Name:</label>
-                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+    <section id="auth-screen" class="app-screen active">
+      <header class="app-header">
+        <h2 style="color: var(--primary-color); margin:0 auto;">NearSell</h2>
+      </header>
+      <div class="scrollable-content">
+        <main style="padding: 20px; max-width: 600px; margin: 0 auto;">
+          <div id="signup-container">
+            <h3>Sign Up / Log In</h3>
+            <form id="signup-form">
+              <label for="name">Full Name:</label>
+              <input type="text" id="name" name="name" required placeholder="Enter your full name">
 
-                        <label for="phone">Phone Number:</label>
-                        <input type="tel" id="phone" name="phone" required placeholder="+91 12345 67890">
-                        <p style="font-size: 0.8em; color: var(--secondary-color);">
-                            We'll send an OTP to this number for verification.
-                        </p>
-                        <button type="submit">Send OTP & Continue</button>
-                    </form>
-                </div>
+              <label for="phone">Phone Number:</label>
+              <input type="tel" id="phone" name="phone" required placeholder="‪+91 12345 67890‬">
+              <p style="font-size: 0.8em; color: var(--secondary-color);">
+                We'll send an OTP to this number for verification.
+              </p>
+              <button type="submit">Send OTP & Continue</button>
+            </form>
+          </div>
 
-                <div id="otp-container" style="display:none; margin-top:20px;">
-                    <form id="otp-form">
-                        <label for="otp">Enter OTP:</label>
-                        <input type="number" id="otp" name="otp" required placeholder="XXXXXX">
-                        <button type="submit">Verify & Enter App</button>
-                        <p style="text-align:center;">
-                            Didn't receive the code? 
-                            <a href="#" onclick="alert('Resend functionality to be implemented with API.')">Resend</a>
-                        </p>
-                    </form>
-                </div>
-            </main>
-        </div>
+          <div id="otp-container" style="display:none; margin-top:20px;">
+            <form id="otp-form">
+              <label for="otp">Enter OTP:</label>
+              <input type="number" id="otp" name="otp" required placeholder="XXXXXX">
+              <button type="submit">Verify & Enter App</button>
+              <p style="text-align:center;">
+                Didn't receive the code?
+                <a href="#" onclick="alert('Resend functionality to be implemented with API.')">Resend</a>
+              </p>
+            </form>
+          </div>
+        </main>
+      </div>
     </section>
 
     <!-- DASHBOARD / HOME SCREEN -->
     <section id="dashboard-screen" class="app-screen">
-        <header class="app-header">
-            <div class="search-area">
-                <div class="search-container">
-                    <input type="search" id="main-search-input" placeholder="Search for items near you..." aria-label="Search items">
-                </div>
-                <button class="location-button" id="change-location-btn" onclick="openLocationSelector()">
-                    &#9906; All India
-                </button>
-            </div>
-
-            <div class="category-bar">
-                <button class="category-button active" data-category="All">All Items</button>
-                <button class="category-button" data-category="Vehicles">&#128663; Vehicle</button>
-                <button class="category-button" data-category="Furniture">&#127969; Furniture</button>
-                <button class="category-button" data-category="Mobile">&#128241; Mobile</button>
-                <button class="category-button" data-category="Electronics">&#9000; Electronics</button>
-                <button class="category-button" data-category="Other">&#128230; Others</button>
-            </div>
-        </header>
-
-        <div class="scrollable-content">
-            <main class="product-list" id="product-list-container"></main>
+      <header class="app-header">
+        <div class="search-area" style="width:100%; gap:10px; align-items:center;">
+          <div class="search-container">
+            <input type="search" id="main-search-input" placeholder="Search for items near you...">
+          </div>
+          <button class="location-button" id="change-location-btn" onclick="openLocationSelector()">
+            &#9906; All India
+          </button>
         </div>
+
+        <div class="category-bar">
+          <button class="category-button active" data-category="All">All Items</button>
+          <button class="category-button" data-category="Vehicles">&#128663; Vehicles</button>
+          <button class="category-button" data-category="Furniture">&#127969; Furniture</button>
+          <button class="category-button" data-category="Mobile">&#128241; Mobiles</button>
+          <button class="category-button" data-category="Electronics">&#9000; Electronics</button>
+          <button class="category-button" data-category="Other">&#128230; Others</button>
+        </div>
+      </header>
+
+      <div class="scrollable-content">
+        <main class="main-content">
+          <div class="product-list" id="product-list-container"></div>
+        </main>
+      </div>
     </section>
 
     <!-- SELL / POST ITEM SCREEN -->
     <section id="sell-screen" class="app-screen">
-        <header class="app-header">
-            <h2 style="text-align:center;">Post Your Ad</h2>
-        </header>
-        <div class="scrollable-content">
-            <main style="padding: 20px;">
-                <form id="sell-form">
-                    <label for="item-title">Item Title:</label>
-                    <input type="text" id="item-title" required placeholder="e.g., Used Sofa Set">
+      <header class="app-header">
+        <h2 style="margin:0 auto;">Post Your Ad</h2>
+      </header>
+      <div class="scrollable-content">
+        <main style="padding: 20px; max-width: 700px; margin:0 auto;">
+          <form id="sell-form">
+            <label for="item-title">Item Title:</label>
+            <input type="text" id="item-title" required placeholder="e.g., Used Sofa Set">
 
-                    <label for="item-photos">Upload Photos (Max 10):</label>
-                    <input type="file" id="item-photos" accept="image/*" onchange="previewImages(event)" required multiple>
-                    <div id="image-preview-container"></div>
+            <label for="item-photos">Upload Photos (Max 10):</label>
+            <input type="file" id="item-photos" accept="image/*" onchange="previewImages(event)" required multiple>
+            <div id="image-preview-container"></div>
 
-                    <label for="item-desc">Detailed Description:</label>
-                    <textarea id="item-desc" rows="4" required placeholder="Condition, age, features, reason for selling."></textarea>
+            <label for="item-desc">Detailed Description:</label>
+            <textarea id="item-desc" rows="4" required placeholder="Condition, age, features, reason for selling."></textarea>
 
-                    <label for="item-price">Price (₹):</label>
-                    <input type="number" id="item-price" required min="100" placeholder="Set a reasonable price">
+            <label for="item-price">Price (₹):</label>
+            <input type="number" id="item-price" required min="100" placeholder="Set a reasonable price">
 
-                    <label for="item-category">Category:</label>
-                    <select id="item-category" required>
-                        <option value="">Select Category</option>
-                        <option value="Electronics">&#9000; Electronics</option>
-                        <option value="Furniture">&#127969; Furniture</option>
-                        <option value="Vehicles">&#128663; Vehicles</option>
-                        <option value="Mobile">&#128241; Mobile</option>
-                        <option value="Other">&#128230; Other</option>
-                    </select>
+            <label for="item-category">Category:</label>
+            <select id="item-category" required>
+              <option value="">Select Category</option>
+              <option value="Electronics">&#9000; Electronics</option>
+              <option value="Furniture">&#127969; Furniture</option>
+              <option value="Vehicles">&#128663; Vehicles</option>
+              <option value="Mobile">&#128241; Mobile</option>
+              <option value="Other">&#128230; Other</option>
+            </select>
 
-                    <div style="display:flex; gap:10px;">
-                        <div style="flex-basis:50%;">
-                            <label for="item-state">State/UT:</label>
-                            <select id="item-state" required></select>
-                        </div>
-                        <div style="flex-basis:50%;">
-                            <label for="item-city">City:</label>
-                            <input type="text" id="item-city" required placeholder="e.g., Gurgaon">
-                        </div>
-                    </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <div style="flex:1;">
+                <label for="item-state">State/UT:</label>
+                <select id="item-state" required></select>
+              </div>
+              <div style="flex:1;">
+                <label for="item-city">City:</label>
+                <input type="text" id="item-city" required placeholder="e.g., Gurgaon">
+              </div>
+            </div>
 
-                    <label for="seller-contact">Contact Number:</label>
-                    <input type="tel" id="seller-contact" required placeholder="Your contact number for buyers">
+            <label for="seller-contact">Contact Number:</label>
+            <input type="tel" id="seller-contact" required placeholder="Your contact number for buyers">
 
-                    <button type="submit" style="margin-top:20px;">Post Ad Now</button>
-                </form>
-            </main>
-        </div>
+            <button type="submit" style="margin-top:20px;">Post Ad Now</button>
+          </form>
+        </main>
+      </div>
     </section>
 
     <!-- PROFILE SCREEN -->
     <section id="profile-screen" class="app-screen">
-        <header class="app-header">
-            <h2 style="text-align:center;">My Profile</h2>
-        </header>
-        <div class="scrollable-content">
-            <main style="padding:20px;">
-                <h3>User Information</h3>
-                <p><strong>Name:</strong> <span id="user-name-display">John Doe</span> (Verified)</p>
-                <p><strong>Phone:</strong> <span id="user-phone-display">+91 98765 XXXXX</span> (Verified)</p>
+      <header class="app-header">
+        <h2 style="margin:0 auto;">My Profile</h2>
+      </header>
+      <div class="scrollable-content">
+        <main style="padding:20px; max-width:700px; margin:0 auto;">
+          <h3>User Information</h3>
+          <p><strong>Name:</strong> <span id="user-name-display">John Doe</span> (Verified)</p>
+          <p><strong>Phone:</strong> <span id="user-phone-display">+91 98765 XXXXX</span> (Verified)</p>
 
-                <hr style="margin:20px 0; border-top:1px solid #eee;">
+          <hr style="margin:20px 0; border-top:1px solid #eee;">
 
-                <h3>My Listings</h3>
-                <ul id="active-listings" style="list-style:none; padding:0;"></ul>
+          <h3>My Listings</h3>
+          <ul id="active-listings" style="list-style:none; padding:0;"></ul>
 
-                <hr style="margin:20px 0; border-top:1px solid #eee;">
+          <hr style="margin:20px 0; border-top:1px solid #eee;">
 
-                <h3>Account</h3>
-                <button style="padding:10px 15px; margin-right:10px; background-color:var(--secondary-color);">Settings</button>
-                <button id="logout-btn" style="padding:10px 15px; background-color:var(--danger-color); color:white;">&#10006; Logout</button>
-            </main>
-        </div>
+          <h3>Account</h3>
+          <button style="padding:10px 15px; background-color:var(--secondary-color); color:white;">Settings</button>
+          <button id="logout-btn" style="padding:10px 15px; background-color:var(--danger-color); color:white;">&#10006; Logout</button>
+        </main>
+      </div>
     </section>
 
     <!-- FOOTER / NAV -->
     <footer class="app-footer">
-        <div class="footer-button active" id="nav-home">&#9637;<span>Home</span></div>
-        <div class="footer-button" id="nav-sell">&#43;<span>Sell</span></div>
-        <div class="footer-button" id="nav-profile">&#9787;<span>Profile</span></div>
+      <div class="footer-button active" id="nav-home">&#9637;<span>Home</span></div>
+      <div class="footer-button" id="nav-sell">&#43;<span>Sell</span></div>
+      <div class="footer-button" id="nav-profile">&#9787;<span>Profile</span></div>
     </footer>
 
     <!-- PRODUCT DETAIL MODAL -->
     <div id="product-detail-modal" class="app-screen app-modal">
-        <header class="modal-header">
-            <button class="modal-close-button" onclick="closeProductDetail()">&#x2190;</button>
-            <h2 id="detail-title">Product Title</h2>
-        </header>
-        <div class="modal-content-scroller">
-            <div class="modal-content" style="padding:0 20px;">
-                <div id="detail-photo-gallery" onclick="openPhotoViewer()"></div>
-                <p style="font-size:1.5em; font-weight:700; color:var(--success-color);">
-                    Price: <span id="detail-price">₹0</span>
-                </p>
-                <hr style="margin:15px 0; border-top:1px solid #eee;">
-                <p style="font-weight:600; color:var(--primary-color);">Seller Contact: <span id="detail-contact-display"></span></p>
-                <h3>Description</h3>
-                <p id="detail-description"></p>
-                <h3>Item Details</h3>
-                <div class="detail-info">
-                    <p><strong>Category:</strong> <span id="detail-category"></span></p>
-                    <p><strong>Location:</strong> <span id="detail-location"></span></p>
-                    <p><strong>Seller:</strong> <span id="detail-owner"></span></p>
-                </div>
-                <button class="contact-seller-button" id="detail-contact-btn">&#9742; Call Seller Now</button>
-            </div>
+      <header class="modal-header">
+        <button class="modal-close-button" onclick="closeProductDetail()">&#x2190;</button>
+        <h2 id="detail-title">Product Title</h2>
+      </header>
+      <div class="modal-content-scroller">
+        <div class="modal-content" style="padding:0 20px;">
+          <div id="detail-photo-gallery" onclick="openPhotoViewer()"></div>
+          <p style="font-size:1.5em; font-weight:700; color:var(--success-color);">
+            Price: <span id="detail-price">₹0</span>
+          </p>
+          <hr style="margin:15px 0; border-top:1px solid #eee;">
+          <p style="font-weight:600; color:var(--primary-color);">Seller Contact: <span id="detail-contact-display"></span></p>
+          <h3>Description</h3>
+          <p id="detail-description"></p>
+          <h3>Item Details</h3>
+          <div class="detail-info">
+            <p><strong>Category:</strong> <span id="detail-category"></span></p>
+            <p><strong>Location:</strong> <span id="detail-location"></span></p>
+            <p><strong>Seller:</strong> <span id="detail-owner"></span></p>
+          </div>
+          <button class="contact-seller-button" id="detail-contact-btn">&#9742; Call Seller Now</button>
         </div>
+      </div>
     </div>
 
     <!-- PHOTO VIEWER MODAL -->
     <div id="photo-viewer-modal" class="app-screen app-modal">
-        <button class="photo-viewer-close-button" onclick="closePhotoViewer()">&#x2190;</button>
-        <div class="photo-viewer-content" id="photo-viewer-content"></div>
+      <button class="photo-viewer-close-button" onclick="closePhotoViewer()">&#x2190;</button>
+      <div class="photo-viewer-content" id="photo-viewer-content"></div>
     </div>
 
     <!-- LOCATION SELECTOR MODAL -->
     <div id="location-modal" class="app-screen app-modal">
-        <header class="modal-header">
-            <button class="modal-close-button" onclick="closeLocationSelector()">&#x2190;</button>
-            <h2>Select Purchase Location</h2>
-        </header>
-        <div class="modal-content-scroller">
-            <main id="location-button-container" style="padding:20px;"></main>
-        </div>
+      <header class="modal-header">
+        <button class="modal-close-button" onclick="closeLocationSelector()">&#x2190;</button>
+        <h2>Select Purchase Location</h2>
+      </header>
+      <div class="modal-content-scroller">
+        <main id="location-button-container" style="padding:20px;"></main>
+      </div>
     </div>
 
-</div>
-<script src="script.js"  ></script>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
